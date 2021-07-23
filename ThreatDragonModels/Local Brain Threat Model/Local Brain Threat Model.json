@@ -128,16 +128,26 @@
               "angle": 0,
               "id": "f59b0210-8a69-4088-937b-2cd0f5497500",
               "z": 5,
-              "hasOpenThreats": false,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "Medium",
+                  "title": "Poison messages",
+                  "type": "Denial of service",
+                  "description": "An attacker could generate a malicious message that the Background Worker cannot process.",
+                  "mitigation": "Implement a poison message queue where messages are placed after a fixed number of retries."
+                }
+              ],
               "attrs": {
                 ".element-shape": {
-                  "class": "element-shape hasNoOpenThreats isInScope"
+                  "class": "element-shape hasOpenThreats isInScope"
                 },
                 "text": {
                   "text": "Message Bus(Kafka)"
                 },
                 ".element-text": {
-                  "class": "element-text hasNoOpenThreats isInScope"
+                  "class": "element-text hasOpenThreats isInScope"
                 }
               }
             },
@@ -154,16 +164,26 @@
               "angle": 0,
               "id": "58cf09f4-de4f-4b84-ac05-549814f6935a",
               "z": 6,
-              "hasOpenThreats": false,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "High",
+                  "title": "Unauthorised access",
+                  "type": "Information disclosure",
+                  "description": "An attacker could make an query call on the Elasticsearch",
+                  "mitigation": "Require all queries to be authenticated."
+                }
+              ],
               "attrs": {
                 ".element-shape": {
-                  "class": "element-shape hasNoOpenThreats isInScope"
+                  "class": "element-shape hasOpenThreats isInScope"
                 },
                 "text": {
                   "text": "Database(Elasticsearch)"
                 },
                 ".element-text": {
-                  "class": "element-text hasNoOpenThreats isInScope"
+                  "class": "element-text hasOpenThreats isInScope"
                 }
               }
             },
@@ -181,6 +201,16 @@
               "id": "f753ac47-cf7d-4f77-8c85-df27216a0e85",
               "z": 7,
               "hasOpenThreats": false,
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "title": "Credential theft",
+                  "type": "Information disclosure",
+                  "description": "An attacker could obtain the DB credentials ans use them to make unauthorised queries.",
+                  "mitigation": "Use a firewall to restrict access to the DB to only the Background Worker IP address."
+                }
+              ],
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasNoOpenThreats isInScope"
@@ -259,6 +289,18 @@
               "id": "2e327ba8-28f0-4719-bd32-b7ee1c53fd54",
               "z": 10,
               "hasOpenThreats": false,
+              "storesCredentials": true,
+              "isEncrypted": true,
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "title": "Credentials should be encrypted",
+                  "type": "Information disclosure",
+                  "description": "The Web Application Config stores credentials used  by the Web App to access the message queue. These could be stolen by an attacker and used to read confidential data or place poison message on the queue.",
+                  "mitigation": "The Message Queue & Database credentials should be encrypted."
+                }
+              ],
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasNoOpenThreats isInScope"
@@ -295,13 +337,23 @@
                 }
               ],
               "z": 11,
-              "hasOpenThreats": false,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "Low",
+                  "title": "Data flow should use HTTP/S",
+                  "type": "Information disclosure",
+                  "description": "These requests are made over the public internet and could be intercepted by an attacker.",
+                  "mitigation": "The requests should require HTTP/S. This will provide confidentiality and integrity. HTTP should not be supported."
+                }
+              ],
               "attrs": {
                 ".marker-target": {
-                  "class": "marker-target hasNoOpenThreats isInScope"
+                  "class": "marker-target hasOpenThreats isInScope"
                 },
                 ".connection": {
-                  "class": "connection hasNoOpenThreats isInScope"
+                  "class": "connection hasOpenThreats isInScope"
                 }
               }
             },
@@ -840,6 +892,103 @@
               "id": "cdd642bd-4d39-4f63-b3a1-0394018b9e96",
               "z": 25,
               "attrs": {}
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "68c533a7-e27a-4c02-9a6c-998c51db6c6a"
+              },
+              "target": {
+                "x": 620,
+                "y": 320
+              },
+              "vertices": [
+                {
+                  "x": 700,
+                  "y": 290
+                }
+              ],
+              "id": "cf5880c7-94a8-4473-a17a-60c0ccd467f4",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.43797380948285874,
+                    "offset": 16.564094413379717
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Inner Request",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 26,
+              "hasOpenThreats": true,
+              "protocol": "HTTP",
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "Low",
+                  "title": "Man in the middle attack",
+                  "type": "Information disclosure",
+                  "description": "An attacker could intercept the innerqueries in transit and obtain sensitive information",
+                  "mitigation": "Enforce an encrypted connection to inner service"
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "x": 630,
+                "y": 350
+              },
+              "target": {
+                "id": "68c533a7-e27a-4c02-9a6c-998c51db6c6a"
+              },
+              "vertices": [
+                {
+                  "x": 740,
+                  "y": 340
+                }
+              ],
+              "id": "b48eeb64-a6c7-4ac6-a9e8-6b9e77b483ba",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.42108175688171545,
+                    "offset": -5.792174243312064
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Inner Response",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 27,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
             }
           ]
         },
